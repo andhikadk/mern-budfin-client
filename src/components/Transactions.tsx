@@ -4,18 +4,25 @@ import {
   CashIcon,
   ChevronRightIcon,
   ShoppingCartIcon,
+  RefreshIcon,
 } from '@heroicons/react/solid';
 import axios from 'axios';
+import Pagination from './Pagination';
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(' ');
 };
 
-const RecentTable = (props: any) => {
+const Transactions = (props: any) => {
   const [transactions, setTransactions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemPerPage, setItemPerPage] = useState(8);
   const [searchParams, setSearchParams] = useSearchParams();
-
   const search = searchParams.get('search');
+
+  const lastItemIndex = currentPage * itemPerPage;
+  const firstItemIndex = lastItemIndex - itemPerPage;
+  const currentTransaction = transactions.slice(firstItemIndex, lastItemIndex);
 
   useEffect(() => {
     GetTransactions();
@@ -26,10 +33,11 @@ const RecentTable = (props: any) => {
       const response = await axios.get(
         'http://localhost:5000/api/transactions'
       );
-      response.data = response.data.slice(0, 5);
       if (search) {
-        const filtered = response.data.filter((t: any) =>
-          t.detail.toLowerCase().includes(search.toLowerCase())
+        const filtered = response.data.filter(
+          (t: any) =>
+            t.detail.toLowerCase().includes(search.toLowerCase()) ||
+            t.date.includes(search)
         );
         setTransactions(filtered);
         return;
@@ -38,6 +46,11 @@ const RecentTable = (props: any) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const clearSearch = () => {
+    setSearchParams('');
+    location.reload();
   };
 
   const IDRupiah = new Intl.NumberFormat('id-ID', {
@@ -54,9 +67,16 @@ const RecentTable = (props: any) => {
     <div className='max-w-6xl mx-auto mt-8 px-0 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
       <div className='flex justify-between'>
         <h2 className='text-lg pl-2 leading-6 font-medium text-gray-900'>
-          Recent activity
+          All Transactions
         </h2>
-        <small className='pr-2 text-gray-500'>last 5 transactions</small>
+        <div className='pr-2 text-gray-500'>
+          <button
+            type='button'
+            className='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500'
+            onClick={clearSearch}>
+            <RefreshIcon className='-ml-1 -mr-0.5 h-5 w-5' aria-hidden='true' />
+          </button>
+        </div>
       </div>
 
       {/* Activity list (smallest breakpoint only) */}
@@ -64,7 +84,7 @@ const RecentTable = (props: any) => {
         <ul
           role='list'
           className='mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden'>
-          {transactions.length === 0 && (
+          {currentTransaction.length === 0 && (
             <li>
               <Link
                 to='/'
@@ -85,14 +105,14 @@ const RecentTable = (props: any) => {
               </Link>
             </li>
           )}
-          {transactions.map((transaction: any) => (
+          {currentTransaction.map((transaction: any) => (
             <li key={transaction._id}>
               <Link
                 to={`/transactions/edit/${transaction._id}`}
                 className='block px-4 py-4 bg-white hover:bg-gray-50'>
                 <span className='flex items-center space-x-4'>
                   <span className='flex-1 flex space-x-2 truncate'>
-                    {transaction.type === 'income' ? (  
+                    {transaction.type === 'income' ? (
                       <CashIcon
                         className='flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                         aria-hidden='true'
@@ -124,23 +144,28 @@ const RecentTable = (props: any) => {
             </li>
           ))}
         </ul>
-
-        <nav
+        <Pagination
+          totalItem={transactions.length}
+          itemPerPage={itemPerPage}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
+        {/* <nav
           className='bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200'
           aria-label='Pagination'>
           <div className='flex-1 flex justify-between'>
-            <a
-              href='#'
+            <Link
+              to='?page=1'
               className='relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500'>
               Previous
-            </a>
-            <a
-              href='#'
+            </Link>
+            <Link
+              to='?page=2'
               className='ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500'>
               Next
-            </a>
+            </Link>
           </div>
-        </nav>
+        </nav> */}
       </div>
 
       {/* Activity table (small breakpoint and up) */}
@@ -169,7 +194,7 @@ const RecentTable = (props: any) => {
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {transactions.length === 0 && (
+                  {currentTransaction.length === 0 && (
                     <tr>
                       <td
                         colSpan={5}
@@ -178,7 +203,7 @@ const RecentTable = (props: any) => {
                       </td>
                     </tr>
                   )}
-                  {transactions.map((transaction: any) => (
+                  {currentTransaction.map((transaction: any) => (
                     <tr key={transaction._id} className='bg-white'>
                       <td className='max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                         <div className='flex'>
@@ -230,30 +255,12 @@ const RecentTable = (props: any) => {
                   ))}
                 </tbody>
               </table>
-              {/* Pagination */}
-              {/* <nav
-                className='bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6'
-                aria-label='Pagination'>
-                <div className='hidden sm:block'>
-                  <p className='text-sm text-gray-700'>
-                    Showing <span className='font-medium'>1</span> to{' '}
-                    <span className='font-medium'>10</span> of{' '}
-                    <span className='font-medium'>20</span> results
-                  </p>
-                </div>
-                <div className='flex-1 flex justify-between sm:justify-end'>
-                  <a
-                    href='#'
-                    className='relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'>
-                    Previous
-                  </a>
-                  <a
-                    href='#'
-                    className='ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'>
-                    Next
-                  </a>
-                </div>
-              </nav> */}
+              <Pagination
+                totalItem={transactions.length}
+                itemPerPage={itemPerPage}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
             </div>
           </div>
         </div>
@@ -262,4 +269,4 @@ const RecentTable = (props: any) => {
   );
 };
 
-export default RecentTable;
+export default Transactions;

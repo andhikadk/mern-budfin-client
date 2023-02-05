@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  ScaleIcon,
   CashIcon,
   ShoppingCartIcon,
+  ScaleIcon,
 } from '@heroicons/react/outline';
 
 const Card = (props: any) => {

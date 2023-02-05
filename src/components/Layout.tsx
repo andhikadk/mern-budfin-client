@@ -258,7 +258,7 @@ const Layout = ({ children }: any) => {
             {/* Search bar */}
             <div className='flex-1 px-4 flex justify-between sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8'>
               <div className='flex-1 flex'>
-                <form className='w-full flex md:ml-0' action='#' method='GET'>
+                <form className='w-full flex md:ml-0'>
                   <label htmlFor='search' className='sr-only'>
                     Search
                   </label>
