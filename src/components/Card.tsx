@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   ScaleIcon,
   CashIcon,
@@ -5,10 +7,36 @@ import {
 } from '@heroicons/react/outline';
 
 const Card = (props: any) => {
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+
   const IDRupiah = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
   });
+
+  useEffect(() => {
+    GetTransactions();
+  }, []);
+
+  const GetTransactions = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/api/transactions'
+      );
+      console.log(response.data);
+      // sum all amount type income
+      const income = response.data.filter((t: any) => t.type === 'income');
+      const incomeAmount = income.map((t: any) => t.amount);
+      const incomeSum = incomeAmount.reduce((a: any, b: any) => a + b, 0);
+      setIncome(incomeSum);
+      // sum all amount type expense
+      const expense = response.data.filter((t: any) => t.type === 'expense');
+      const expenseAmount = expense.map((t: any) => t.amount);
+      const expenseSum = expenseAmount.reduce((a: any, b: any) => a + b, 0);
+      setExpense(expenseSum);
+    } catch (error) {}
+  };
 
   const cards = [
     {
@@ -21,20 +49,20 @@ const Card = (props: any) => {
       name: 'Incomes',
       href: '#',
       icon: CashIcon,
-      amount: IDRupiah.format(0),
+      amount: IDRupiah.format(income),
     },
     {
       name: 'Expenses',
       href: '#',
       icon: ShoppingCartIcon,
-      amount: IDRupiah.format(0),
+      amount: IDRupiah.format(expense),
     },
   ];
 
   return (
     <div>
       <div className='max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
-        <h2 className='text-lg leading-6 font-medium text-gray-900'>
+        <h2 className='text-lg pl-2 leading-6 font-medium text-gray-900'>
           Overview
         </h2>
         <div className='mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'>
@@ -65,7 +93,7 @@ const Card = (props: any) => {
                   </div>
                 </div>
               </div>
-              <div className='bg-gray-50 px-5 py-3'>
+              {/* <div className='bg-gray-50 px-5 py-3'>
                 <div className='text-sm'>
                   <a
                     href={card.href}
@@ -73,7 +101,7 @@ const Card = (props: any) => {
                     View all
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>

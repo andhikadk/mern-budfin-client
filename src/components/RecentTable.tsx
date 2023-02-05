@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   CashIcon,
   ChevronRightIcon,
@@ -13,6 +13,9 @@ const classNames = (...classes: any) => {
 
 const RecentTable = (props: any) => {
   const [transactions, setTransactions] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get('search');
 
   useEffect(() => {
     GetTransactions();
@@ -23,8 +26,17 @@ const RecentTable = (props: any) => {
       const response = await axios.get(
         'http://localhost:5000/api/transactions'
       );
+      if (search) {
+        const filtered = response.data.filter((t: any) =>
+          t.detail.toLowerCase().includes(search.toLowerCase())
+        );
+        setTransactions(filtered);
+        return;
+      }
       setTransactions(response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const IDRupiah = new Intl.NumberFormat('id-ID', {
@@ -38,8 +50,8 @@ const RecentTable = (props: any) => {
   };
 
   return (
-    <div>
-      <h2 className='max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
+    <div className='max-w-6xl mx-auto mt-8 px-0 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
+      <h2 className='text-lg pl-2 leading-6 font-medium text-gray-900'>
         Recent activity
       </h2>
 
@@ -108,7 +120,7 @@ const RecentTable = (props: any) => {
 
       {/* Activity table (small breakpoint and up) */}
       <div className='hidden sm:block'>
-        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='max-w-6xl mx-auto px-0 sm:px-0 lg:px-0'>
           <div className='flex flex-col mt-2'>
             <div className='align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg'>
               <table className='min-w-full divide-y divide-gray-200'>

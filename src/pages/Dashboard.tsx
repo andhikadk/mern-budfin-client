@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useNavigate, Link } from 'react-router-dom';
-import { CheckCircleIcon } from '@heroicons/react/solid';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
 import RecentTable from '../components/RecentTable';
@@ -60,23 +59,13 @@ const Dashboard = () => {
                       {greeting}, {name}
                     </h1>
                   </div>
-                  <dl className='mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap'>
-                    <dt className='sr-only'>Account status</dt>
-                    <dd className='mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize'>
-                      <CheckCircleIcon
-                        className='flex-shrink-0 mr-1.5 h-5 w-5 text-green-400'
-                        aria-hidden='true'
-                      />
-                      Verified account
-                    </dd>
-                  </dl>
                 </div>
               </div>
             </div>
             <div className='mt-6 flex space-x-3 md:mt-0 md:ml-4'>
               <Link
                 to='/transactions/add/income'
-                className='inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500'>
+                className='inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg- hover:text-white hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500'>
                 Add income
               </Link>
               <Link
@@ -89,7 +78,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className='mt-8'>
-        <Card balance={balance} />
+        <Card balance={balance} authUser={id} />
         <RecentTable authUser={id} />
       </div>
     </Layout>
