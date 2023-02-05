@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
+import EditTransaction from './pages/EditTransaction';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path='/' element={<Dashboard />} />
         <Route path='/transactions/add/income' element={<AddIncome />} />
         <Route path='/transactions/add/expense' element={<AddExpense />} />
+        <Route path='/transactions/edit/:id' element={<EditTransaction />} />
         <Route path='/history' element={<History />} />
         <Route path='*' element={<NotFound />} />
       </Routes>

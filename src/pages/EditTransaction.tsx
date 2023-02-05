@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 import Layout from '../components/Layout';
-import RecentTable from '../components/RecentTable';
 
-const AddExpense = () => {
+const EditTransaction = () => {
   const today = new Date();
   const yyyy = today.getFullYear();
   let mm: any = today.getMonth() + 1; // Months start at 0!
@@ -16,67 +14,100 @@ const AddExpense = () => {
 
   const formattedToday = yyyy + '-' + mm + '-' + dd;
 
-  const [id, setId] = useState('');
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
   const [detail, setDetail] = useState('');
   const [amount, setAmount] = useState(null as any);
   const [date, setDate] = useState(formattedToday);
+  const [type, setType] = useState('');
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
+    const getTransactionById = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/transactions/${id}`
+        );
+        console.log(response.data.category);
+        setCategory(response.data.category._id);
+        setDetail(response.data.detail);
+        setAmount(response.data.amount);
+        setDate(response.data.date.substring(0, 10));
+      } catch (error: any) {}
+    };
+    getTransactionById();
     getCategories();
-    refreshToken();
   }, []);
-
-  const refreshToken = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/token');
-      const decoded: any = jwt_decode(response.data.accessToken);
-      setId(decoded._id);
-    } catch (error: any) {
-      if (error.response) {
-        navigate('/login');
-      }
-    }
-  };
 
   const getCategories = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/categories');
-      const categories = response.data.filter((c: any) => c.type === 'expense');
-      setCategories(categories);
-      setCategory(categories[0]._id);
+      const type = await axios.get(
+        `http://localhost:5000/api/transactions/${id}`
+      );
+      if (type.data.type === 'income') {
+        setType('income');
+        const categories = response.data.filter(
+          (c: any) => c.type === 'income'
+        );
+        setCategories(categories);
+      } else if (type.data.type === 'expense') {
+        setType('expense');
+        const categories = response.data.filter(
+          (c: any) => c.type === 'expense'
+        );
+        setCategories(categories);
+      }
     } catch (error: any) {
       console.log(error);
     }
   };
 
-  const saveTransaction = async (e: any) => {
-    // e.preventDefault();
+  const updateTransaction = async (e: any) => {
     try {
-      await axios.post('http://localhost:5000/api/transactions', {
+      await axios.put(`http://localhost:5000/api/transactions/${id}`, {
         category,
         detail,
-        type: 'expense',
+        type,
         amount,
         date,
       });
+      // navigate back
+      navigate(-1);
     } catch (error: any) {
       console.log(error);
     }
+  };
+
+  const deleteTransaction = async () => {
+    // confirm delete
+    if (confirm('Are you sure to delete this transaction?'))
+      try {
+        await axios.delete(`http://localhost:5000/api/transactions/${id}`);
+        // navigate back
+        navigate(-1);
+      } catch (error: any) {
+        console.log(error);
+      }
   };
 
   return (
     <Layout>
-      <h2 className='max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
-        Add Expense
-      </h2>
+      <div className='flex justify-between max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
+        <h2 className=''>Edit Transaction</h2>
+        <button
+          type='button'
+          onClick={deleteTransaction}
+          className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'>
+          Delete
+        </button>
+      </div>
       <div className='max-w-6xl mt-2 mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='mt-4 sm:mt-0'>
           <div className='md:grid md:grid-cols-2 md:gap-6'>
             <div className='mt-5 md:mt-0 md:col-span-2'>
-              <form onSubmit={saveTransaction}>
+              <form onSubmit={updateTransaction}>
                 <div className='shadow overflow-hidden sm:rounded-md'>
                   <div className='px-4 py-5 bg-white sm:p-6'>
                     <div className='grid grid-cols-8 gap-6'>
@@ -164,7 +195,7 @@ const AddExpense = () => {
                     <button
                       type='submit'
                       className='inline-flex justify-center py-2 px-8 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                      Save
+                      Update
                     </button>
                   </div>
                 </div>
@@ -173,11 +204,8 @@ const AddExpense = () => {
           </div>
         </div>
       </div>
-      <div className='mt-8'>
-        <RecentTable authUser={id} />
-      </div>
     </Layout>
   );
 };
 
-export default AddExpense;
+export default EditTransaction;

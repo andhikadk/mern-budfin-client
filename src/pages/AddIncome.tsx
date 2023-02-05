@@ -73,7 +73,7 @@ const AddIncome = () => {
         Add Income
       </h2>
       <div className='max-w-6xl mt-2 mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='mt-10 sm:mt-0'>
+        <div className='mt-4 sm:mt-0'>
           <div className='md:grid md:grid-cols-2 md:gap-6'>
             <div className='mt-5 md:mt-0 md:col-span-2'>
               <form onSubmit={saveTransaction}>

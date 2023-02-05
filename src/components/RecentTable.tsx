@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   CashIcon,
   ChevronRightIcon,
@@ -22,8 +23,6 @@ const RecentTable = (props: any) => {
       const response = await axios.get(
         'http://localhost:5000/api/transactions'
       );
-      console.log(response.data);
-
       setTransactions(response.data);
     } catch (error) {}
   };
@@ -51,7 +50,9 @@ const RecentTable = (props: any) => {
           className='mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden'>
           {transactions.map((transaction: any) => (
             <li key={transaction._id}>
-              <a href='#' className='block px-4 py-4 bg-white hover:bg-gray-50'>
+              <Link
+                to={`/transactions/edit/${transaction._id}`}
+                className='block px-4 py-4 bg-white hover:bg-gray-50'>
                 <span className='flex items-center space-x-4'>
                   <span className='flex-1 flex space-x-2 truncate'>
                     {transaction.type === 'income' ? (
@@ -82,7 +83,7 @@ const RecentTable = (props: any) => {
                     aria-hidden='true'
                   />
                 </span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -135,8 +136,8 @@ const RecentTable = (props: any) => {
                     <tr key={transaction._id} className='bg-white'>
                       <td className='max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                         <div className='flex'>
-                          <a
-                            href='#'
+                          <Link
+                            to={`/transactions/edit/${transaction._id}`}
                             className='group inline-flex space-x-2 truncate text-sm'>
                             {transaction.type === 'income' ? (
                               <CashIcon
@@ -152,7 +153,7 @@ const RecentTable = (props: any) => {
                             <p className='text-gray-500 truncate group-hover:text-gray-900'>
                               {transaction.detail}
                             </p>
-                          </a>
+                          </Link>
                         </div>
                       </td>
                       <td className='hidden px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500 md:block'>

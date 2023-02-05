@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -16,28 +16,77 @@ import {
 } from '@heroicons/react/outline';
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 import logo from '/navbar-logo.png';
-
-const navigation = [
-  { name: 'Home', href: '/', icon: HomeIcon, current: true },
-  { name: 'History', href: '/history', icon: ClockIcon, current: false },
-  { name: 'Balances', href: '#', icon: ScaleIcon, current: false },
-  { name: 'Cards', href: '#', icon: CreditCardIcon, current: false },
-  { name: 'Reports', href: '#', icon: DocumentReportIcon, current: false },
-];
-const secondaryNavigation = [
-  { name: 'Settings', href: '#', icon: CogIcon },
-  { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
-  { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
-];
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(' ');
 };
 
 const Layout = ({ children }: any) => {
+  const [name, setName] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    currentRoute();
+    refreshToken();
+  }, []);
+
+  const refreshToken = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/token');
+      const decoded: any = jwt_decode(response.data.accessToken);
+      setName(decoded.name);
+    } catch (error: any) {
+      if (error.response) {
+        navigate('/login');
+      }
+    }
+  };
+
+  const currentRoute = () => {
+    return window.location.pathname;
+  };
+
+  const navigation = [
+    {
+      name: 'Home',
+      href: '/',
+      icon: HomeIcon,
+      current: currentRoute() === '/',
+    },
+    {
+      name: 'History',
+      href: '/history',
+      icon: ClockIcon,
+      current: currentRoute() === '/history',
+    },
+    {
+      name: 'Balances',
+      href: '#',
+      icon: ScaleIcon,
+      current: currentRoute() === '#',
+    },
+    {
+      name: 'Cards',
+      href: '#',
+      icon: CreditCardIcon,
+      current: currentRoute() === '#',
+    },
+    {
+      name: 'Reports',
+      href: '#',
+      icon: DocumentReportIcon,
+      current: currentRoute() === '#',
+    },
+  ];
+
+  const secondaryNavigation = [
+    { name: 'Settings', href: '#', icon: CogIcon },
+    { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
+    { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
+  ];
 
   const Logout = async () => {
     try {
@@ -242,7 +291,7 @@ const Layout = ({ children }: any) => {
                     <Menu.Button className='max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50'>
                       <span className='hidden ml-3 text-gray-700 text-sm font-medium lg:block'>
                         <span className='sr-only'>Open user menu for </span>
-                        Emilia Birch
+                        {name}
                       </span>
                       <ChevronDownIcon
                         className='hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block'
