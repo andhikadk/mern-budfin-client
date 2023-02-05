@@ -5,7 +5,7 @@ import jwt_decode from 'jwt-decode';
 import Layout from '../components/Layout';
 import RecentTable from '../components/RecentTable';
 
-const AddIncome = () => {
+const AddExpense = () => {
   const today = new Date();
   const yyyy = today.getFullYear();
   let mm: any = today.getMonth() + 1; // Months start at 0!
@@ -44,7 +44,7 @@ const AddIncome = () => {
   const getCategories = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/categories');
-      const categories = response.data.filter((c: any) => c.type === 'income');
+      const categories = response.data.filter((c: any) => c.type === 'expense');
       setCategories(categories);
       setCategory(categories[0]._id);
     } catch (error: any) {
@@ -58,7 +58,7 @@ const AddIncome = () => {
       await axios.post('http://localhost:5000/api/transactions', {
         category,
         detail,
-        type: 'income',
+        type: 'expense',
         amount,
         date,
       });
@@ -70,7 +70,7 @@ const AddIncome = () => {
   return (
     <Layout>
       <h2 className='max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
-        Add Income
+        Add Expense
       </h2>
       <div className='max-w-6xl mt-2 mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='mt-10 sm:mt-0'>
@@ -180,4 +180,4 @@ const AddIncome = () => {
   );
 };
 
-export default AddIncome;
+export default AddExpense;
