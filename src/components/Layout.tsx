@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/outline';
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
 import axios from 'axios';
-import logo from '../../public/navbar-logo.png';
+import logo from '/navbar-logo.png';
 
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon, current: true },
