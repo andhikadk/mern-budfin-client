@@ -10,6 +10,8 @@ const Pagination = ({
     pages.push(i);
   }
 
+  console.log(pages.length);
+
   return (
     <nav
       className='bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6'
@@ -43,12 +45,14 @@ const Pagination = ({
               </button>
             );
           })} */}
-        {currentPage !== pages.length && (
+        {currentPage !== pages.length && totalItem !== 0 ? (
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             className='ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50'>
             Next
           </button>
+        ) : (
+          ''
         )}
       </div>
     </nav>

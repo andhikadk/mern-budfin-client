@@ -6,6 +6,16 @@ import {
   ScaleIcon,
 } from '@heroicons/react/outline';
 
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm: any = today.getMonth() + 1; // Months start at 0!
+let dd: any = today.getDate();
+
+if (mm < 10) mm = '0' + mm;
+if (dd < 10) dd = '0' + dd;
+
+const formattedToday = yyyy + '-' + mm + '-' + dd;
+
 const Card = (props: any) => {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
@@ -25,13 +35,19 @@ const Card = (props: any) => {
         'http://localhost:5000/api/transactions'
       );
       console.log(response.data);
-      // sum all amount type income
-      const income = response.data.filter((t: any) => t.type === 'income');
+      // sum all amount type income only today
+      const income = response.data.filter(
+        (t: any) =>
+          t.type === 'income' && t.date.substring(0, 10) === formattedToday
+      );
       const incomeAmount = income.map((t: any) => t.amount);
       const incomeSum = incomeAmount.reduce((a: any, b: any) => a + b, 0);
       setIncome(incomeSum);
       // sum all amount type expense
-      const expense = response.data.filter((t: any) => t.type === 'expense');
+      const expense = response.data.filter(
+        (t: any) =>
+          t.type === 'expense' && t.date.substring(0, 10) === formattedToday
+      );
       const expenseAmount = expense.map((t: any) => t.amount);
       const expenseSum = expenseAmount.reduce((a: any, b: any) => a + b, 0);
       setExpense(expenseSum);
@@ -41,19 +57,16 @@ const Card = (props: any) => {
   const cards = [
     {
       name: 'Account balance',
-      href: '#',
       icon: ScaleIcon,
       amount: IDRupiah.format(props.balance),
     },
     {
       name: 'Incomes',
-      href: '#',
       icon: CashIcon,
       amount: IDRupiah.format(income),
     },
     {
       name: 'Expenses',
-      href: '#',
       icon: ShoppingCartIcon,
       amount: IDRupiah.format(expense),
     },
@@ -62,9 +75,12 @@ const Card = (props: any) => {
   return (
     <div>
       <div className='max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
-        <h2 className='text-lg pl-2 leading-6 font-medium text-gray-900'>
-          Overview
-        </h2>
+        <div className='flex justify-between'>
+          <h2 className='text-lg pl-1 leading-6 font-medium text-gray-900'>
+            Overview
+          </h2>
+          <small className='pr-2 text-gray-500'>{formattedToday}</small>
+        </div>
         <div className='mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'>
           {/* Card */}
           {cards.map((card) => (

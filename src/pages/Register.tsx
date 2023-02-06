@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { EyeIcon, EyeOffIcon } from '@heroicons/react/outline';
 import axios from 'axios';
 
 const Register = () => {
@@ -7,6 +8,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confPassword, setConfPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
 
@@ -120,17 +122,29 @@ const Register = () => {
                   Password
                 </label>
                 <div className='mt-1'>
-                  <input
-                    id='password'
-                    name='password'
-                    type='password'
-                    autoComplete='current-password'
-                    required
-                    placeholder='Password'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                  />
+                  <div className='relative'>
+                    <input
+                      id='password'
+                      name='password'
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete='password'
+                      required
+                      placeholder='Password'
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                    />
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      className='absolute right-0 top-0 mt-2.5 mr-3'>
+                      {showPassword ? (
+                        <EyeOffIcon className='w-5 h-5 text-gray-500' />
+                      ) : (
+                        <EyeIcon className='w-5 h-5 text-gray-500' />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -141,17 +155,29 @@ const Register = () => {
                   Confirm Password
                 </label>
                 <div className='mt-1'>
-                  <input
-                    id='confPassword'
-                    name='confPassword'
-                    type='password'
-                    autoComplete='current-password'
-                    required
-                    placeholder='Password'
-                    value={confPassword}
-                    onChange={(e) => setConfPassword(e.target.value)}
-                    className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                  />
+                  <div className='relative'>
+                    <input
+                      id='confPassword'
+                      name='confPassword'
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete='confPassword'
+                      required
+                      placeholder='Password'
+                      value={confPassword}
+                      onChange={(e) => setConfPassword(e.target.value)}
+                      className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                    />
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      className='absolute right-0 top-0 mt-2.5 mr-3'>
+                      {showPassword ? (
+                        <EyeOffIcon className='w-5 h-5 text-gray-500' />
+                      ) : (
+                        <EyeIcon className='w-5 h-5 text-gray-500' />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 

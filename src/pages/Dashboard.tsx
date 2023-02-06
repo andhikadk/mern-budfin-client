@@ -7,6 +7,7 @@ import Card from '../components/Card';
 import RecentTable from '../components/RecentTable';
 
 let today = new Date();
+
 let curHr = today.getHours();
 let greeting = '';
 

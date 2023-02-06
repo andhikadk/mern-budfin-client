@@ -65,6 +65,7 @@ const EditTransaction = () => {
   };
 
   const updateTransaction = async (e: any) => {
+    e.preventDefault();
     try {
       await axios.put(`http://localhost:5000/api/transactions/${id}`, {
         category,
@@ -74,7 +75,7 @@ const EditTransaction = () => {
         date,
       });
       // navigate back
-      navigate('/');
+      goBack(e);
     } catch (error: any) {
       console.log(error);
     }

@@ -53,7 +53,7 @@ const RecentTable = (props: any) => {
   return (
     <div className='max-w-6xl mx-auto mt-8 px-0 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
       <div className='flex justify-between'>
-        <h2 className='text-lg pl-2 leading-6 font-medium text-gray-900'>
+        <h2 className='text-lg pl-1 leading-6 font-medium text-gray-900'>
           Recent activity
         </h2>
         <small className='pr-2 text-gray-500'>last 5 transactions</small>
@@ -92,7 +92,7 @@ const RecentTable = (props: any) => {
                 className='block px-4 py-4 bg-white hover:bg-gray-50'>
                 <span className='flex items-center space-x-4'>
                   <span className='flex-1 flex space-x-2 truncate'>
-                    {transaction.type === 'income' ? (  
+                    {transaction.type === 'income' ? (
                       <CashIcon
                         className='flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                         aria-hidden='true'
