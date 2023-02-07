@@ -6,7 +6,15 @@ import Layout from '../components/Layout';
 import Card from '../components/Card';
 import RecentTable from '../components/RecentTable';
 
-let today = new Date();
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm: any = today.getMonth() + 1; // Months start at 0!
+let dd: any = today.getDate();
+
+if (mm < 10) mm = '0' + mm;
+if (dd < 10) dd = '0' + dd;
+
+const formattedToday = yyyy + '-' + mm + '-' + dd;
 
 let curHr = today.getHours();
 let greeting = '';
@@ -23,17 +31,18 @@ const Dashboard = () => {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [balance, setBalance] = useState(0);
-  // const [token, setToken] = useState('');
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     refreshToken();
+    getTransactions();
   }, []);
 
   const refreshToken = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/token');
-      // setToken(response.data.accessToken);
       const decoded: any = jwt_decode(response.data.accessToken);
       setId(decoded._id);
       setName(decoded.name);
@@ -43,6 +52,30 @@ const Dashboard = () => {
         navigate('/login');
       }
     }
+  };
+
+  const getTransactions = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/api/transactions'
+      );
+      const income = response.data.filter(
+        (t: any) =>
+          t.type === 'income' && t.date.substring(0, 10) === formattedToday
+      );
+      const incomeAmount = income.map((t: any) => t.amount);
+      const incomeSum = incomeAmount.reduce((a: any, b: any) => a + b, 0);
+      console.log(income);
+      setIncome(incomeSum);
+
+      const expense = response.data.filter(
+        (t: any) =>
+          t.type === 'expense' && t.date.substring(0, 10) === formattedToday
+      );
+      const expenseAmount = expense.map((t: any) => t.amount);
+      const expenseSum = expenseAmount.reduce((a: any, b: any) => a + b, 0);
+      setExpense(expenseSum);
+    } catch (error) {}
   };
 
   return (
@@ -79,7 +112,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className='mt-8'>
-        <Card balance={balance} authUser={id} />
+        <Card balance={balance} income={income} expense={expense} />
         <RecentTable authUser={id} />
       </div>
     </Layout>

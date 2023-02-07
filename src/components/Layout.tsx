@@ -77,9 +77,9 @@ const Layout = ({ children }: any) => {
     },
     {
       name: 'Reports',
-      href: '#',
+      href: '/report',
       icon: DocumentReportIcon,
-      current: currentRoute() === '#',
+      current: currentRoute() === '/report',
     },
   ];
 

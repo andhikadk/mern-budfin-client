@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
+import Report from './pages/Report';
 import NotFound from './components/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
 import EditTransaction from './pages/EditTransaction';
-import Test from './pages/Test';
 
 const App = () => {
   return (
@@ -20,7 +20,7 @@ const App = () => {
         <Route path='/transactions/add/expense' element={<AddExpense />} />
         <Route path='/transactions/edit/:id' element={<EditTransaction />} />
         <Route path='/history' element={<History />} />
-        <Route path='/test' element={<Test />} />
+        <Route path='/report' element={<Report />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>

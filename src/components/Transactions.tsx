@@ -16,8 +16,9 @@ const classNames = (...classes: any) => {
 const Transactions = (props: any) => {
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage, setItemPerPage] = useState(8);
+  const [itemPerPage, setItemPerPage] = useState(9);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
   const search = searchParams.get('search');
 
   const lastItemIndex = currentPage * itemPerPage;
@@ -37,12 +38,16 @@ const Transactions = (props: any) => {
         const filtered = response.data.filter(
           (t: any) =>
             t.detail.toLowerCase().includes(search.toLowerCase()) ||
-            t.date.includes(search)
+            t.date.includes(search) ||
+            t.type.toLowerCase().includes(search.toLowerCase()) ||
+            t.amount.toString().includes(search)
         );
         setTransactions(filtered);
+        setIsLoading(false);
         return;
       }
       setTransactions(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +103,9 @@ const Transactions = (props: any) => {
                       />
                     </span>
                     <span className='flex flex-col text-gray-500 text-sm truncate'>
-                      <span className='truncate'>No transaction yet</span>
+                      <span className='truncate'>
+                        {isLoading ? 'Loading' : 'No transaction yet'}
+                      </span>
                     </span>
                   </span>
                 </span>
@@ -199,7 +206,7 @@ const Transactions = (props: any) => {
                       <td
                         colSpan={5}
                         className='px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500'>
-                        No transactions yet
+                        {isLoading ? 'Loading' : 'No transaction yet'}
                       </td>
                     </tr>
                   )}

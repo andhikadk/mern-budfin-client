@@ -1,11 +1,54 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
-  CashIcon,
+  CashIcon, // for salary and other category (i)
   ChevronRightIcon,
-  ShoppingCartIcon,
+  ShoppingCartIcon, // for other category (e)
+  CakeIcon, // for consumption category (e)
+  BriefcaseIcon, // for stuff category (e)
+  TruckIcon, // for transportation category (e)
+  GiftIcon, // for gift category (i)
+  CurrencyDollarIcon, // for bonus category (i)
 } from '@heroicons/react/solid';
 import axios from 'axios';
+
+const incomeCategoryIcon = [
+  {
+    name: 'Salary',
+    icon: CashIcon,
+  },
+  {
+    name: 'Bonus',
+    icon: CurrencyDollarIcon,
+  },
+  {
+    name: 'Gift',
+    icon: GiftIcon,
+  },
+  {
+    name: 'Other',
+    icon: CashIcon,
+  },
+];
+
+const expenseCategoryIcon = [
+  {
+    name: 'Consumption',
+    icon: CakeIcon,
+  },
+  {
+    name: 'Transportation',
+    icon: TruckIcon,
+  },
+  {
+    name: 'Stuff',
+    icon: BriefcaseIcon,
+  },
+  {
+    name: 'Other',
+    icon: ShoppingCartIcon,
+  },
+];
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(' ');
@@ -14,6 +57,7 @@ const classNames = (...classes: any) => {
 const RecentTable = (props: any) => {
   const [transactions, setTransactions] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
 
   const search = searchParams.get('search');
 
@@ -23,6 +67,7 @@ const RecentTable = (props: any) => {
 
   const GetTransactions = async () => {
     try {
+      // setIsLoading(true);
       const response = await axios.get(
         'http://localhost:5000/api/transactions'
       );
@@ -32,9 +77,11 @@ const RecentTable = (props: any) => {
           t.detail.toLowerCase().includes(search.toLowerCase())
         );
         setTransactions(filtered);
+        setIsLoading(false);
         return;
       }
       setTransactions(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +95,17 @@ const RecentTable = (props: any) => {
   const typeStyles: any = {
     income: 'bg-green-100 text-green-800',
     expense: 'bg-red-100 text-red-800',
+  };
+
+  // make function to check transaction category name then match the icon
+  const getIcon = (category: any, type: any) => {
+    if (type === 'income') {
+      const icon = incomeCategoryIcon.find((i) => i.name === category);
+      return icon?.icon;
+    } else {
+      const icon = expenseCategoryIcon.find((i) => i.name === category);
+      return icon?.icon;
+    }
   };
 
   return (
@@ -78,7 +136,9 @@ const RecentTable = (props: any) => {
                       />
                     </span>
                     <span className='flex flex-col text-gray-500 text-sm truncate'>
-                      <span className='truncate'>No transaction yet</span>
+                      <span className='truncate'>
+                        {isLoading ? 'Loading' : 'No transaction yet'}
+                      </span>
                     </span>
                   </span>
                 </span>
@@ -174,10 +234,11 @@ const RecentTable = (props: any) => {
                       <td
                         colSpan={5}
                         className='px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500'>
-                        No transactions yet
+                        {isLoading ? 'Loading' : 'No transaction yet'}
                       </td>
                     </tr>
                   )}
+
                   {transactions.map((transaction: any) => (
                     <tr key={transaction._id} className='bg-white'>
                       <td className='max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
@@ -191,7 +252,7 @@ const RecentTable = (props: any) => {
                                 aria-hidden='true'
                               />
                             ) : (
-                              <ShoppingCartIcon
+                              <CurrencyDollarIcon
                                 className='flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                                 aria-hidden='true'
                               />
