@@ -27,7 +27,7 @@ const EditTransaction = () => {
     const getTransactionById = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/transactions/${id}`
+          `${import.meta.env.VITE_BASE_URL}/api/transactions/${id}`
         );
         console.log(response.data.category);
         setCategory(response.data.category._id);
@@ -42,9 +42,11 @@ const EditTransaction = () => {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/categories');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/categories`
+      );
       const type = await axios.get(
-        `http://localhost:5000/api/transactions/${id}`
+        `${import.meta.env.VITE_BASE_URL}/api/transactions/${id}`
       );
       if (type.data.type === 'income') {
         setType('income');
@@ -67,13 +69,16 @@ const EditTransaction = () => {
   const updateTransaction = async (e: any) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/transactions/${id}`, {
-        category,
-        detail,
-        type,
-        amount,
-        date,
-      });
+      await axios.put(
+        `${import.meta.env.VITE_BASE_URL}/api/transactions/${id}`,
+        {
+          category,
+          detail,
+          type,
+          amount,
+          date,
+        }
+      );
       // navigate back
       goBack(e);
     } catch (error: any) {
@@ -85,7 +90,9 @@ const EditTransaction = () => {
     // confirm delete
     if (confirm('Are you sure to delete this transaction?'))
       try {
-        await axios.delete(`http://localhost:5000/api/transactions/${id}`);
+        await axios.delete(
+          `${import.meta.env.VITE_BASE_URL}/api/transactions/${id}`
+        );
         // navigate back
         navigate(-1);
       } catch (error: any) {

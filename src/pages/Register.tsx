@@ -18,7 +18,9 @@ const Register = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       if (response) {
         navigate('/');
       }
@@ -32,7 +34,7 @@ const Register = () => {
   const Register = async (e: any) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/users', {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users`, {
         name,
         email,
         password,

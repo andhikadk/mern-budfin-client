@@ -14,7 +14,7 @@ let dd: any = today.getDate();
 if (mm < 10) mm = '0' + mm;
 if (dd < 10) dd = '0' + dd;
 
-const formattedToday = yyyy + '-' + mm + '-' + dd;
+const formattedToday = `${yyyy}-${mm}-${dd}`;
 
 let curHr = today.getHours();
 let greeting = '';
@@ -42,7 +42,9 @@ const Dashboard = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       const decoded: any = jwt_decode(response.data.accessToken);
       setId(decoded._id);
       setName(decoded.name);
@@ -57,7 +59,7 @@ const Dashboard = () => {
   const getTransactions = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/transactions'
+        `${import.meta.env.VITE_BASE_URL}/api/transactions`
       );
       const income = response.data.filter(
         (t: any) =>
@@ -65,7 +67,6 @@ const Dashboard = () => {
       );
       const incomeAmount = income.map((t: any) => t.amount);
       const incomeSum = incomeAmount.reduce((a: any, b: any) => a + b, 0);
-      console.log(income);
       setIncome(incomeSum);
 
       const expense = response.data.filter(
@@ -112,7 +113,12 @@ const Dashboard = () => {
         </div>
       </div>
       <div className='mt-8'>
-        <Card balance={balance} income={income} expense={expense} />
+        <Card
+          balance={balance}
+          date={formattedToday}
+          income={income}
+          expense={expense}
+        />
         <RecentTable authUser={id} />
       </div>
     </Layout>

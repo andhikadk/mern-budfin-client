@@ -8,11 +8,13 @@ import Register from './pages/Register';
 import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
 import EditTransaction from './pages/EditTransaction';
+import LineChart from './components/LineChart';
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path='/linechart' element={<LineChart />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Dashboard />} />

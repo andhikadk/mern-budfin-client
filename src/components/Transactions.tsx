@@ -32,7 +32,7 @@ const Transactions = (props: any) => {
   const GetTransactions = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/transactions'
+        `${import.meta.env.VITE_BASE_URL}/api/transactions`
       );
       if (search) {
         const filtered = response.data.filter(

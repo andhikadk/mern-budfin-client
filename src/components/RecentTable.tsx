@@ -1,54 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
-  CashIcon, // for salary and other category (i)
+  CashIcon,
   ChevronRightIcon,
-  ShoppingCartIcon, // for other category (e)
-  CakeIcon, // for consumption category (e)
-  BriefcaseIcon, // for stuff category (e)
-  TruckIcon, // for transportation category (e)
-  GiftIcon, // for gift category (i)
-  CurrencyDollarIcon, // for bonus category (i)
+  ShoppingCartIcon,
 } from '@heroicons/react/solid';
 import axios from 'axios';
-
-const incomeCategoryIcon = [
-  {
-    name: 'Salary',
-    icon: CashIcon,
-  },
-  {
-    name: 'Bonus',
-    icon: CurrencyDollarIcon,
-  },
-  {
-    name: 'Gift',
-    icon: GiftIcon,
-  },
-  {
-    name: 'Other',
-    icon: CashIcon,
-  },
-];
-
-const expenseCategoryIcon = [
-  {
-    name: 'Consumption',
-    icon: CakeIcon,
-  },
-  {
-    name: 'Transportation',
-    icon: TruckIcon,
-  },
-  {
-    name: 'Stuff',
-    icon: BriefcaseIcon,
-  },
-  {
-    name: 'Other',
-    icon: ShoppingCartIcon,
-  },
-];
 
 const classNames = (...classes: any) => {
   return classes.filter(Boolean).join(' ');
@@ -69,7 +26,7 @@ const RecentTable = (props: any) => {
     try {
       // setIsLoading(true);
       const response = await axios.get(
-        'http://localhost:5000/api/transactions'
+        `${import.meta.env.VITE_BASE_URL}/api/transactions`
       );
       response.data = response.data.slice(0, 5);
       if (search) {
@@ -95,17 +52,6 @@ const RecentTable = (props: any) => {
   const typeStyles: any = {
     income: 'bg-green-100 text-green-800',
     expense: 'bg-red-100 text-red-800',
-  };
-
-  // make function to check transaction category name then match the icon
-  const getIcon = (category: any, type: any) => {
-    if (type === 'income') {
-      const icon = incomeCategoryIcon.find((i) => i.name === category);
-      return icon?.icon;
-    } else {
-      const icon = expenseCategoryIcon.find((i) => i.name === category);
-      return icon?.icon;
-    }
   };
 
   return (
@@ -252,7 +198,7 @@ const RecentTable = (props: any) => {
                                 aria-hidden='true'
                               />
                             ) : (
-                              <CurrencyDollarIcon
+                              <ShoppingCartIcon
                                 className='flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500'
                                 aria-hidden='true'
                               />

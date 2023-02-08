@@ -36,7 +36,9 @@ const Layout = ({ children }: any) => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       const decoded: any = jwt_decode(response.data.accessToken);
       setName(decoded.name);
     } catch (error: any) {
@@ -91,7 +93,7 @@ const Layout = ({ children }: any) => {
 
   const Logout = async () => {
     try {
-      await axios.delete('http://localhost:5000/api/logout');
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/logout`);
       navigate('/login');
     } catch (error) {}
   };

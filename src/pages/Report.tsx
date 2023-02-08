@@ -4,6 +4,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
+import LineChart from '../components/LineChart';
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -70,6 +71,8 @@ const Report = () => {
   const [balance, setBalance] = useState(0);
   const [year, setYear] = useState(`${yyyy}`);
   const [month, setMonth] = useState(`${mm}`);
+  const [incomeData, setIncomeData] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
   const [filteredDate, setFilteredDate] = useState(`${year}-${month}`);
   const navigate = useNavigate();
 
@@ -83,7 +86,9 @@ const Report = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       const decoded: any = jwt_decode(response.data.accessToken);
       setBalance(decoded.balance);
     } catch (error: any) {
@@ -96,22 +101,30 @@ const Report = () => {
   const getTransactions = async (filteredDate: string) => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/transactions'
+        `${import.meta.env.VITE_BASE_URL}/api/transactions`
       );
       const income = response.data.filter(
         (t: any) =>
           t.type === 'income' && t.date.substring(0, 7) === filteredDate
       );
+      const incomeFilter: any = [
+        ...income.map((t: any) => ({ amount: t.amount, date: t.date })),
+      ];
       const incomeAmount = income.map((t: any) => t.amount);
       const incomeSum = incomeAmount.reduce((a: any, b: any) => a + b, 0);
+      setIncomeData(incomeFilter);
       setIncome(incomeSum);
 
       const expense = response.data.filter(
         (t: any) =>
           t.type === 'expense' && t.date.substring(0, 7) === filteredDate
       );
+      const expenseFilter: any = [
+        ...expense.map((t: any) => ({ amount: t.amount, date: t.date })),
+      ];
       const expenseAmount = expense.map((t: any) => t.amount);
       const expenseSum = expenseAmount.reduce((a: any, b: any) => a + b, 0);
+      setExpenseData(expenseFilter);
       setExpense(expenseSum);
     } catch (error) {}
   };
@@ -174,6 +187,12 @@ const Report = () => {
         date={filteredDate}
         income={income}
         expense={expense}
+      />
+      <LineChart
+        income={incomeData}
+        expense={expenseData}
+        year={year}
+        month={month}
       />
     </Layout>
   );

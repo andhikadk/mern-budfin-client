@@ -31,7 +31,9 @@ const AddExpense = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       const decoded: any = jwt_decode(response.data.accessToken);
       setId(decoded._id);
     } catch (error: any) {
@@ -43,7 +45,9 @@ const AddExpense = () => {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/categories');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/categories`
+      );
       const categories = response.data.filter((c: any) => c.type === 'expense');
       setCategories(categories);
       setCategory(categories[0]._id);
@@ -55,7 +59,7 @@ const AddExpense = () => {
   const saveTransaction = async (e: any) => {
     // e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/transactions', {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/transactions`, {
         category,
         detail,
         type: 'expense',

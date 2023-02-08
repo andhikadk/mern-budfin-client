@@ -16,7 +16,10 @@ const Login = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
+
       if (response) {
         navigate('/');
       }
@@ -30,10 +33,13 @@ const Login = () => {
   const Auth = async (e: any) => {
     e.preventDefault();
     try {
-      const credentials = await axios.post('http://127.0.0.1:5000/api/login', {
-        email,
-        password,
-      });
+      const credentials = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/login`,
+        {
+          email,
+          password,
+        }
+      );
       document.cookie = `refreshToken=${credentials.data.refreshToken}`;
       navigate('/');
     } catch (error: any) {
