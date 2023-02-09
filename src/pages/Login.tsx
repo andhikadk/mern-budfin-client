@@ -40,7 +40,7 @@ const Login = () => {
           password,
         }
       );
-      document.cookie = `refreshToken=${credentials.data.refreshToken}`;
+      // document.cookie = `refreshToken=${credentials.data.refreshToken}`;
       navigate('/');
     } catch (error: any) {
       if (error.response) {
