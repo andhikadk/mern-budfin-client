@@ -42,7 +42,9 @@ const Dashboard = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get(`/api/token`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
       const decoded: any = jwt_decode(response.data.accessToken);
       setId(decoded._id);
       setName(decoded.name);
@@ -56,7 +58,9 @@ const Dashboard = () => {
 
   const getTransactions = async () => {
     try {
-      const response = await axios.get(`/api/transactions`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/transactions`
+      );
       const income = response.data.filter(
         (t: any) =>
           t.type === 'income' && t.date.substring(0, 10) === formattedToday
