@@ -13,6 +13,7 @@ import {
   ScaleIcon,
   ShieldCheckIcon,
   XIcon,
+  LogoutIcon,
 } from '@heroicons/react/outline';
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
 import axios from 'axios';
@@ -90,6 +91,8 @@ const Layout = ({ children }: any) => {
     { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
     { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
   ];
+
+  const logoutNavigation = [{ name: 'Logout', icon: LogoutIcon }];
 
   const Logout = async () => {
     try {
@@ -185,6 +188,18 @@ const Layout = ({ children }: any) => {
                           />
                           {item.name}
                         </Link>
+                      ))}
+                      {logoutNavigation.map((item) => (
+                        <button
+                          key={item.name}
+                          className='group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600 w-full text-left'
+                          onClick={Logout}>
+                          <item.icon
+                            className='mr-4 h-6 w-6 text-cyan-200'
+                            aria-hidden='true'
+                          />
+                          {item.name}
+                        </button>
                       ))}
                     </div>
                   </div>
