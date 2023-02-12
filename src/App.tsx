@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
 import EditTransaction from './pages/EditTransaction';
+import Profile from './pages/Profile';
 import LineChart from './components/LineChart';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path='/transactions/edit/:id' element={<EditTransaction />} />
         <Route path='/history' element={<History />} />
         <Route path='/report' element={<Report />} />
+        <Route path='/profile' element={<Profile />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
