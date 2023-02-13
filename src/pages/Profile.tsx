@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 const Profile = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confPassword, setConfPassword] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    refreshToken();
+  }, []);
+
+  const refreshToken = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/token`
+      );
+      const decoded: any = jwt_decode(response.data.accessToken);
+      setName(decoded.name);
+      setEmail(decoded.email);
+    } catch (error: any) {
+      if (error.response) {
+        navigate('/login');
+      }
+    }
+  };
+
   return (
     <Layout>
       <div className='max-w-6xl mx-auto mt-8 px-0 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
@@ -28,7 +56,9 @@ const Profile = () => {
                       type='text'
                       name='first-name'
                       id='first-name'
-                      autoComplete='given-name'
+                      autoComplete='first-name'
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className='mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md'
                     />
                   </div>
@@ -44,9 +74,9 @@ const Profile = () => {
                       name='email-address'
                       id='email-address'
                       autoComplete='email'
-                      value='andhika'
+                      value={email}
                       disabled
-                      className='mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md'
+                      className='mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md disabled:text-slate-500 disabled:bg-slate-100'
                     />
                   </div>
 

@@ -9,7 +9,7 @@ import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
 import EditTransaction from './pages/EditTransaction';
 import Profile from './pages/Profile';
-import LineChart from './components/LineChart';
+import LineChart from './components/Chart';
 
 const App = () => {
   return (

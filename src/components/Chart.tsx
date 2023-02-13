@@ -5,23 +5,25 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const LineChart = ({ income, expense, year, month }: any) => {
+const Chart = ({ income, expense, year, month }: any) => {
   const days = [];
 
   if (
@@ -69,42 +71,40 @@ const LineChart = ({ income, expense, year, month }: any) => {
   const expenseSum = Object.values(expenseSums);
 
   return (
-    <div className='max-w-6xl mx-auto mt-6 px-0 text-lg leading-6 font-medium text-gray-900 bg-white sm:px-6 lg:px-8'>
-      <Line
-        data={{
-          labels: days,
-          datasets: [
-            {
-              label: 'Income',
-              data: incomeSum,
-              borderColor: 'rgb(34, 197, 94)',
-              backgroundColor: 'rgba(34, 197, 94, 0.5)',
-            },
-            {
-              label: 'Expense',
-              data: expenseSum,
-              borderColor: 'rgb(239, 68, 68)',
-              backgroundColor: 'rgba(239, 68, 68, 0.5)',
-            },
-          ],
-        }}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top' as const,
-            },
-            title: {
-              display: true,
-              text: 'Statistic',
-            },
+    <Bar
+      data={{
+        labels: days,
+        datasets: [
+          {
+            label: 'Income',
+            data: incomeSum,
+            borderColor: 'rgb(34, 197, 94)',
+            backgroundColor: 'rgba(34, 197, 94, 0.5)',
           },
-        }}
-        // height={200}
-        // width={600}
-      />
-    </div>
+          {
+            label: 'Expense',
+            data: expenseSum,
+            borderColor: 'rgb(239, 68, 68)',
+            backgroundColor: 'rgba(239, 68, 68, 0.5)',
+          },
+        ],
+      }}
+      options={{
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top' as const,
+          },
+          title: {
+            display: true,
+            text: `Statistic ${month}-${year}`,
+          },
+        },
+      }}
+      // height={200}
+      // width={600}
+    />
   );
 };
 
-export default LineChart;
+export default Chart;

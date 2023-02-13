@@ -4,7 +4,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
-import LineChart from '../components/LineChart';
+import Chart from '../components/Chart';
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -188,12 +188,16 @@ const Report = () => {
         income={income}
         expense={expense}
       />
-      <LineChart
-        income={incomeData}
-        expense={expenseData}
-        year={year}
-        month={month}
-      />
+      <div className='max-w-6xl mx-auto mt-8 px-0 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8'>
+        <div className='bg-white px-6 py-2 shadow rounded-lg'>
+          <Chart
+            income={incomeData}
+            expense={expenseData}
+            year={year}
+            month={month}
+          />
+        </div>
+      </div>
     </Layout>
   );
 };
