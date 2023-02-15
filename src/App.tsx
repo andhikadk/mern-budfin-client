@@ -9,13 +9,11 @@ import AddIncome from './pages/AddIncome';
 import AddExpense from './pages/AddExpense';
 import EditTransaction from './pages/EditTransaction';
 import Profile from './pages/Profile';
-import LineChart from './components/Chart';
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/linechart' element={<LineChart />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<Dashboard />} />

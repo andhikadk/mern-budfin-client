@@ -4,19 +4,17 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   BarElement,
   Title,
   Tooltip,
