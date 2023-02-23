@@ -66,18 +66,18 @@ const Layout = ({ children }: any) => {
       icon: ClockIcon,
       current: currentRoute() === '/history',
     },
-    {
-      name: 'Balances',
-      href: '#',
-      icon: ScaleIcon,
-      current: currentRoute() === '#',
-    },
-    {
-      name: 'Cards',
-      href: '#',
-      icon: CreditCardIcon,
-      current: currentRoute() === '#',
-    },
+    // {
+    //   name: 'Balances',
+    //   href: '#',
+    //   icon: ScaleIcon,
+    //   current: currentRoute() === '#',
+    // },
+    // {
+    //   name: 'Cards',
+    //   href: '#',
+    //   icon: CreditCardIcon,
+    //   current: currentRoute() === '#',
+    // },
     {
       name: 'Reports',
       href: '/report',
@@ -86,10 +86,10 @@ const Layout = ({ children }: any) => {
     },
   ];
 
-  const secondaryNavigation = [
-    { name: 'Settings', href: '#', icon: CogIcon },
-    { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
-    { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
+  const secondaryNavigation: {} = [
+    // { name: 'Settings', href: '#', icon: CogIcon },
+    // { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
+    // { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
   ];
 
   const logoutNavigation = [{ name: 'Logout', icon: LogoutIcon }];
