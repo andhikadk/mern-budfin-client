@@ -92,8 +92,6 @@ const Layout = ({ children }: any) => {
     // { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
   ];
 
-  console.log(secondaryNavigation.length);
-
   const logoutNavigation = [{ name: 'Logout', icon: LogoutIcon }];
 
   const Logout = async () => {
